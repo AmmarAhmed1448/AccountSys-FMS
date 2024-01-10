@@ -80,5 +80,17 @@ class VDM{
             throw new UnexpectedValueException("Amount can not be negative");
         }
     }
+    
+    public static void sizeConstraintException(String accId, String cnic, String pNo){
+        if(accId.length() != 10){
+            throw new UnexpectedValueException("Length of account Id should be 10");
+        }
+        else if (cnic.length() != 13) {
+            throw new UnexpectedValueException("Length of CNIC No should be 10");
+        }
+        else if(pNo.length() != 11){
+            throw new UnexpectedValueException("Length of Phone No. should be 10");
+        }
+    }
 
 }

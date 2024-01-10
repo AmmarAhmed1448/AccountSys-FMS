@@ -1,11 +1,12 @@
 import java.util.*;
-class AccountSys{
+
+class AccountSys {
     public static final double MAX_WITHDRAW = 20000;
     public static final double MIN_WITHDRAW = 500;
     public static final double MAX_DEPOSIT = 100000;
     public static final double MIN_DEPOSIT = 500;
     public static final double MIN_ACC_BALANCE = 100;
-    public static final double MAX_ACC_BALANCE = 500000; 
+    public static final double MAX_ACC_BALANCE = 500000;
 
     private String accId;
     private String cnic;
@@ -15,7 +16,6 @@ class AccountSys{
     private boolean isActive;
     private static Set<AccountSys> accountSystem = new HashSet<>();
 
-
     public AccountSys() {
         accId = null;
         cnic = null;
@@ -23,63 +23,64 @@ class AccountSys{
         phoneNo = null;
         isActive = true;
 
-        // VDM.initTest(this.accId, this.cnic, this.balance, this.phoneNo, this.isActive);
+        // VDM.initTest(this.accId, this.cnic, this.balance, this.phoneNo,
+        // this.isActive);
         VDM.initTest(this);
 
     }
-    public boolean inv(){
+
+    public boolean inv() {
         return (balance >= 0);
-        // || (type = withdraw && amount >= MIN_WITHDRAW && amount <= MAX_WITHDRAW && 
-        // balance >= amount) || (type = deposit && amount >= MIN_DEPOSIT && amount <= MAX_DEPOSIT && 
+        // || (type = withdraw && amount >= MIN_WITHDRAW && amount <= MAX_WITHDRAW &&
+        // balance >= amount) || (type = deposit && amount >= MIN_DEPOSIT && amount <=
+        // MAX_DEPOSIT &&
         // balance >= amount)
     }
 
-    public boolean init(){
-        return((accId == null) && (cnic == null) && (balance == 0.0) && (phoneNo == null) && (isActive == true));
+    public boolean init() {
+        return ((accId == null) && (cnic == null) && (balance == 0.0) && (phoneNo == null) && (isActive == true));
     }
 
     private boolean accountExists(String accIdIn) {
-            // Check if an account already exists with the provided AccId and CNIC
-            for (AccountSys acc : accountSystem) {
-                if (acc.accId.equals(accIdIn)) {
-                    return true;
-                }
+        // Check if an account already exists with the provided AccId and CNIC
+        for (AccountSys acc : accountSystem) {
+            if (acc.accId.equals(accIdIn)) {
+                return true;
             }
-            return false;
+        }
+        return false;
     }
-    
+
     private boolean cnicExists(String cnicIn) {
-            // Check if an account already exists with the provided AccId and CNIC
-            for (AccountSys acc : accountSystem) {
-                if (acc.cnic.equals(cnicIn)) {
-                    return true;
-                }
+        // Check if an account already exists with the provided AccId and CNIC
+        for (AccountSys acc : accountSystem) {
+            if (acc.cnic.equals(cnicIn)) {
+                return true;
             }
-            return false;
+        }
+        return false;
     }
 
     private AccountSys findAccount(String accIdIn) {
-            // Find and return an account with the provided AccId
-            for (AccountSys acc : accountSystem) {
-                if (acc.accId.equals(accIdIn)) {
-                    return acc;
-                }
+        // Find and return an account with the provided AccId
+        for (AccountSys acc : accountSystem) {
+            if (acc.accId.equals(accIdIn)) {
+                return acc;
             }
-            throw new IllegalArgumentException("Account not found.");
         }
+        throw new IllegalArgumentException("Account not found.");
+    }
 
-
-    public void openAcc(String accIdIn, String cnicIn, String nameIn, double balanceIn, String phoneNoIn){
+    public void openAcc(String accIdIn, String cnicIn, String nameIn, double balanceIn, String phoneNoIn) {
         // if (accountExists(accIdIn)) {
-        //         throw new IllegalArgumentException("Account already exists with the provided AccId and CNIC.");
-        //     }
+        // throw new IllegalArgumentException("Account already exists with the provided
+        // AccId and CNIC.");
+        // }
 
         VDM.openAccPreTest(accountExists(accIdIn) && cnicExists(cnicIn));
-
-        if(balanceIn < 0){
-            throw new IllegalArgumentException("Balance can not be negative");
-        }
-            // Create a new AccountSys object
+        VDM.negativeAmountException(balanceIn < 0);
+        VDM.sizeConstraintException(accIdIn, cnicIn, phoneNoIn);
+        // Create a new AccountSys object
         AccountSys newAccount = new AccountSys();
         newAccount.accId = accIdIn;
         newAccount.cnic = cnicIn;
@@ -94,9 +95,10 @@ class AccountSys{
         VDM.invTest(this);
     }
 
-    public void closeAcc(String accId){
+    public void closeAcc(String accId) {
         // if(balance != 0){
-        //     throw new IllegalArgumentException("Balance must be zero to close the account.");
+        // throw new IllegalArgumentException("Balance must be zero to close the
+        // account.");
         // }
 
         VDM.closeAccExistPreTest(!accountExists(accId));
@@ -108,115 +110,109 @@ class AccountSys{
     }
 
     public void deposit(double amountDep, String toAccountDep) {
-            // Preconditions
-            // if (!accountExists(toAccountDep)) {
-            //     throw new IllegalArgumentException("Target account does not exist.");
-            // }
+        // Preconditions
+        // if (!accountExists(toAccountDep)) {
+        // throw new IllegalArgumentException("Target account does not exist.");
+        // }
 
-            VDM.depositPreTest(!accountExists(toAccountDep));
-            VDM.closedAccountException(!findAccount(toAccountDep).isActive);
-            VDM.negativeAmountException(amountDep < 0);
-            // Operation
-            
-            for (AccountSys acc : accountSystem) {
-                if (acc.accId.equals(toAccountDep)) {
-                    acc.balance += amountDep;
+        VDM.depositPreTest(!accountExists(toAccountDep));
+        VDM.closedAccountException(!findAccount(toAccountDep).isActive);
+        VDM.negativeAmountException(amountDep < 0);
+        // Operation
+
+        for (AccountSys acc : accountSystem) {
+            if (acc.accId.equals(toAccountDep)) {
+                acc.balance += amountDep;
+            }
+        }
+
+        VDM.invTest(this);
+
+    }
+
+    public void withdraw(double amountWithdraw, String fromAccount) {
+        // Preconditions
+        // if (!accountExists(fromAccount)) {
+        // throw new IllegalArgumentException("Source account does not exist.");
+        // }
+
+        VDM.withdrawPreTest(!accountExists(fromAccount));
+        VDM.closedAccountException(!findAccount(fromAccount).isActive);
+        VDM.negativeAmountException(amountWithdraw < 0);
+
+        // Operation
+        for (AccountSys acc : accountSystem) {
+            if (acc.accId.equals(fromAccount)) {
+                if (acc.balance >= amountWithdraw) {
+                    acc.balance -= amountWithdraw;
+                } else {
+                    VDM.insufficientBalance();
                 }
             }
+        }
+        VDM.invTest(this);
+    }
 
-            VDM.invTest(this);
+    public void transfer(double amountTrans, String toAccount, String fromAccount) {
+        // Preconditions
+        // if (!accountExists(fromAccount) || !accountExists(toAccount)) {
+        // throw new IllegalArgumentException("Source or target account does not
+        // exist.");
+        // }
 
+        VDM.negativeAmountException(amountTrans < 0);
+        VDM.transferPreTest(!accountExists(fromAccount) || !accountExists(toAccount));
+        VDM.closedAccountException(!findAccount(fromAccount).isActive || !findAccount(toAccount).isActive);
+
+        // Find source and target accounts
+        AccountSys sourceAccount = findAccount(fromAccount);
+        AccountSys targetAccount = findAccount(toAccount);
+
+        // Operation
+        if (sourceAccount.balance >= amountTrans) {
+            sourceAccount.balance -= amountTrans;
+            targetAccount.balance += amountTrans;
+        } else {
+            VDM.insufficientBalance();
         }
 
-     public void withdraw(double amountWithdraw, String fromAccount) {
-            // Preconditions
-            // if (!accountExists(fromAccount)) {
-            //     throw new IllegalArgumentException("Source account does not exist.");
-            // }
+        VDM.invTest(this);
 
-            VDM.withdrawPreTest(!accountExists(fromAccount));
-            VDM.closedAccountException(!findAccount(fromAccount).isActive);
-            VDM.negativeAmountException(amountWithdraw < 0);
+    }
 
-            // Operation
-            for (AccountSys acc : accountSystem) {
-                if (acc.accId.equals(fromAccount)) {
-                    if (acc.balance >= amountWithdraw) {
-                        acc.balance -= amountWithdraw;
-                    } 
-                    else {
-                        VDM.insufficientBalance();
-                    }
-                }
-            }
-            VDM.invTest(this);
-        }
+    public double getAccountBalance(String accountId) {
+        // Preconditions
+        // if (!accountExists(accountId)) {
+        // throw new IllegalArgumentException("Account does not exist.");
+        // }
 
+        VDM.getAccPreTest(!accountExists(accountId));
+        // Operation
+        double currentBalance = findAccount(accountId).balance;
 
-        public void transfer(double amountTrans, String toAccount, String fromAccount) {
-            // Preconditions
-            // if (!accountExists(fromAccount) || !accountExists(toAccount)) {
-            //     throw new IllegalArgumentException("Source or target account does not exist.");
-            // }
+        return currentBalance;
+    }
 
-            VDM.negativeAmountException(amountTrans < 0);
-            VDM.transferPreTest(!accountExists(fromAccount) || !accountExists(toAccount));
-            VDM.closedAccountException(!findAccount(fromAccount).isActive || !findAccount(toAccount).isActive);
+    public Map<String, Object> getAccountDetails(String accountId) {
+        // Preconditions
+        // if (!accountExists(accountId)) {
+        // throw new IllegalArgumentException("Account does not exist.");
+        // }
 
-            // Find source and target accounts
-            AccountSys sourceAccount = findAccount(fromAccount);
-            AccountSys targetAccount = findAccount(toAccount);
+        VDM.getAccPreTest(!accountExists(accountId));
 
-            // Operation
-            if (sourceAccount.balance >= amountTrans) {
-                sourceAccount.balance -= amountTrans;
-                targetAccount.balance += amountTrans;
-            } else {
-                VDM.insufficientBalance();
-            }
+        // Operation
+        AccountSys acc = findAccount(accountId);
 
-            VDM.invTest(this);
+        // Create a HashMap to store the attributes
+        Map<String, Object> accountDetailsMap = new HashMap<>();
+        accountDetailsMap.put("accId", acc.accId);
+        accountDetailsMap.put("name", acc.name);
+        accountDetailsMap.put("balance", acc.balance);
+        accountDetailsMap.put("cnic", acc.cnic);
+        accountDetailsMap.put("phoneNo", acc.phoneNo);
 
-
-        }
-
-
-        public double getAccountBalance(String accountId) {
-            // Preconditions
-            // if (!accountExists(accountId)) {
-            //     throw new IllegalArgumentException("Account does not exist.");
-            // }
-
-            VDM.getAccPreTest(!accountExists(accountId));
-            // Operation
-            double currentBalance = findAccount(accountId).balance;
-
-
-
-            return currentBalance;
-        }
-
-        public Map<String, Object> getAccountDetails(String accountId) {
-            // Preconditions
-            // if (!accountExists(accountId)) {
-            //     throw new IllegalArgumentException("Account does not exist.");
-            // }
-
-            VDM.getAccPreTest(!accountExists(accountId));
-
-
-            // Operation
-            AccountSys acc = findAccount(accountId);
-
-            // Create a HashMap to store the attributes
-            Map<String, Object> accountDetailsMap = new HashMap<>();
-            accountDetailsMap.put("accId", acc.accId);
-            accountDetailsMap.put("name", acc.name);
-            accountDetailsMap.put("balance", acc.balance);
-            accountDetailsMap.put("cnic", acc.cnic);
-            accountDetailsMap.put("phoneNo", acc.phoneNo);
-
-            return accountDetailsMap;
-        }
+        return accountDetailsMap;
+    }
 
 }

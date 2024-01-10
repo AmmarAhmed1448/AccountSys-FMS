@@ -13,8 +13,8 @@ public class AccountSysTest {
         System.out.println("4. Withdraw Cash");
         System.out.println("5. Transfer Cash");
         System.out.println("6. Get Balance");
-        System.out.println("6. Get account your Details");
-        System.out.println("7. Quit");
+        System.out.println("7. Get account your Details");
+        System.out.println("8. Quit");
         System.out.print("Enter choice (1-7): ");
         choice = EasyIn.getChar();
         try {
@@ -56,7 +56,7 @@ public class AccountSysTest {
         } catch (Exception e) {
           e.printStackTrace();
         }
-      } while (choice != '7');
+      } while (choice != '8');
     } catch (VDM.UnexpectedValueException e) {
       System.out.println("Error: Initial object breaks invariant. " + e.getMessage());
       EasyIn.pause("\nPress Enter to quit");
