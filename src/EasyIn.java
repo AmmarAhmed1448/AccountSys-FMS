@@ -15,14 +15,6 @@ public class EasyIn {
         }
     }
 
-    public static int getInt() {
-        try {
-            return Integer.parseInt(reader.readLine());
-        } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
 
     public static void pause(String message) {
         System.out.println(message);

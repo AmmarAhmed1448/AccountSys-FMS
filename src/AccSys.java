@@ -160,7 +160,7 @@ class AccountSys {
         VDM.withdrawPreTest(!accountExists(fromAccount));
         VDM.closedAccountException(!findAccount(fromAccount).isActive);
         VDM.negativeAmountException(amountWithdraw < 0);
-        VDM.outOfRangeWithdrawException(depositInRange(amountWithdraw));
+        VDM.outOfRangeWithdrawException(withdrawInRange(amountWithdraw));
 
         // Operation
         for (AccountSys acc : accountSystem) {
