@@ -81,6 +81,18 @@ class VDM{
         }
     }
     
+    public static void outOfRangeDepositException(boolean cond){
+        if(!cond){
+            throw new UnexpectedValueException("Deposit amount range violated");
+        }
+    }
+    
+    public static void outOfRangeWithdrawException(boolean cond){
+        if(!cond){
+            throw new UnexpectedValueException("Withdraw amount range violated");
+        }
+    }
+    
     public static void sizeConstraintException(String accId, String cnic, String pNo){
         if(accId.length() != 10){
             throw new UnexpectedValueException("Length of account Id should be 10");

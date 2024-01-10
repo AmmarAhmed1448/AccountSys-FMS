@@ -71,6 +71,25 @@ class AccountSys {
         throw new IllegalArgumentException("Account not found.");
     }
 
+    private boolean depositInRange(double bal){
+        if(MIN_DEPOSIT <= bal && bal <= MAX_DEPOSIT){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    private boolean withdrawInRange(double bal){
+        if(MIN_WITHDRAW <= bal && bal <= MAX_WITHDRAW){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+
+
     public void openAcc(String accIdIn, String cnicIn, String nameIn, double balanceIn, String phoneNoIn) {
         // if (accountExists(accIdIn)) {
         // throw new IllegalArgumentException("Account already exists with the provided
@@ -118,6 +137,8 @@ class AccountSys {
         VDM.depositPreTest(!accountExists(toAccountDep));
         VDM.closedAccountException(!findAccount(toAccountDep).isActive);
         VDM.negativeAmountException(amountDep < 0);
+        VDM.outOfRangeDepositException(depositInRange(amountDep));
+        
         // Operation
 
         for (AccountSys acc : accountSystem) {
@@ -139,6 +160,7 @@ class AccountSys {
         VDM.withdrawPreTest(!accountExists(fromAccount));
         VDM.closedAccountException(!findAccount(fromAccount).isActive);
         VDM.negativeAmountException(amountWithdraw < 0);
+        VDM.outOfRangeWithdrawException(depositInRange(amountWithdraw));
 
         // Operation
         for (AccountSys acc : accountSystem) {
